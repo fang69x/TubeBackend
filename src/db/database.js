@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import constants from "../constants.js";
-const { DB_NAME } = constants;
+import { DB_NAME } from "../constants.js";
+
 const connectDB = async () => {
     try {
         console.log(process.env.MONGODB_URI);  // Should log the MongoDB URI
