@@ -96,6 +96,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
 // check for user creation ? return response: return error
 
-
+ 
 
 export { registerUser };
