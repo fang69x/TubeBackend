@@ -45,8 +45,11 @@ const registerUser = asyncHandler(async (req, res) => {
     // NOTE: req.files comes from multer middleware that processes uploaded files
     // FIX: Added optional chaining to prevent errors if structure is different
     const avatarLocalPath = req.files?.avatar?.[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
-
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
+    
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required")
     }
@@ -55,11 +58,8 @@ const registerUser = asyncHandler(async (req, res) => {
     // NOTE: uploadOnCloudinary handles the actual file upload to Cloudinary service
     const avatar = await uploadOnCloudinary(avatarLocalPath)
     
-    // FIX: Only try to upload coverImage if it exists
-    let coverImage;
-    if (coverImageLocalPath) {
-        coverImage = await uploadOnCloudinary(coverImageLocalPath)
-    }
+    // Only try to upload coverImage if it exists
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
     if (!avatar) {
         throw new ApiError(400, "Error uploading avatar file")
